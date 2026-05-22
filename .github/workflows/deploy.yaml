@@ -1,0 +1,26 @@
+name: Deploy
+on:
+  push:
+    branches: [main]
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger homelab build
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.HOMELAB_PAT }}
+          repository: WalkerRout/homelab
+          event-type: build
+          client-payload: |
+            {
+              "repo": "WalkerRout/klaxon",
+              "services": [
+                {
+                  "image": "klaxon-server",
+                  "context": "server",
+                  "dockerfile": "server/Dockerfile",
+                  "target": "production"
+                }
+              ]
+            }

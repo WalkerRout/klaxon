@@ -1,0 +1,13 @@
+services:
+  server-production:
+    container_name: klaxon-server
+    image: klaxon-server:latest
+    build:
+      context: server
+      dockerfile: Dockerfile
+      target: production
+    restart: unless-stopped
+    profiles:
+      - production
+
+# ClusterIP is default network and is already internal to the cluster

@@ -1,0 +1,39 @@
+services:
+  server-development:
+    container_name: klaxon-server
+    build:
+      context: server
+      dockerfile: Dockerfile
+      target: development
+    restart: unless-stopped
+    environment:
+      - KUBECONFIG=/root/.kube/config
+    volumes:
+      - ./server/backend:/app/backend
+      - ${HOME}/.kube:/root/.kube:ro
+    networks:
+      - internal
+    profiles:
+      - development
+
+  reverse-proxy-development:
+    container_name: klaxon-reverse-proxy
+    build:
+      context: nginx
+      dockerfile: Dockerfile
+    depends_on:
+      - server-development
+    restart: unless-stopped
+    networks:
+      - internal
+      - external
+    ports:
+      - "80:80"
+    profiles:
+      - development
+
+networks:
+  internal:
+    driver: bridge
+  external:
+    driver: bridge
