@@ -1,5 +1,6 @@
 FROM lukemathwalker/cargo-chef:latest-rust-1 AS chef
 WORKDIR /app
+RUN echo 'precedence ::ffff:0:0/96 100' >> /etc/gai.conf
 
 FROM chef AS planner
 COPY . .
